@@ -6,7 +6,7 @@ import java.util.List;
 public class Regine {
 
 	private int N;
-	private List<Integer> soluzione;
+	private List<List<Integer>> soluzioni;
 	// N è il numero di righe e colonne della scacchiera
 	//   (righe e colonne numerate da 0 a N-1)
 	// ad ogni livello posizioniamo una regina in una nuova riga
@@ -20,22 +20,23 @@ public class Regine {
 	//     [0, 2]
 	//            [0, 2, 1]
 	
-	public List<Integer> risolvi(int N){ // ritorna la prima soluzione trovata
+	public List<List<Integer>> risolvi(int N){ // ritorna la prima soluzione trovata
 		this.N = N;
 		List<Integer> parziale = new ArrayList<Integer>();
-		this.soluzione = null;
+		this.soluzioni = new ArrayList<>();
 		
 		cerca(parziale, 0);
-		return this.soluzione;
+		
+		return this.soluzioni;
 	}
 	
 	
 	// cerca == true : trovato; cerca == false: cerca ancora
-	private boolean cerca(List<Integer>parziale, int livello) {
+	private void cerca(List<Integer>parziale, int livello) {
 		if(livello==N) { // caso terminale
 			//System.out.println(parziale);
-			this.soluzione = new ArrayList<>(parziale);
-			return true;
+			this.soluzioni.add(new ArrayList<>(parziale));
+
 		} 
 		else {
 			for(int colonna=0; colonna<N; colonna++) {
@@ -48,16 +49,13 @@ public class Regine {
 				
 				if(posValida(parziale, colonna)) { // faccio ricorsione
 					parziale.add(colonna); // es. colonna 0. se è valida la nuova posizione, la posso aggiungere alla lista delle soluzioni parziali
-					boolean trovato = cerca(parziale, livello+1);
-					if(trovato)
-						return true;
+					cerca(parziale, livello+1);
 					parziale.remove(parziale.size()-1); // backtracking
 					// dato che io voglio inserire tutte le colonne possibii per una singola riga, ogni volta
 					// che aggiungo una possibile soluzione alla lista parziale, prima di poterne cercare un'altra,
 					// devo eliminare dalla lista parziale la soluzione possibile precedentemente trovata
 				}
 			}
-			return false;
 		}
 	}
 
